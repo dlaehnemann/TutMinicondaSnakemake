@@ -1,0 +1,145 @@
+---
+title: "Data visualization in R: ggplot2"
+author: "David Lähnemann"
+date: "August 31, 2016"
+output:
+  ioslides_presentation:
+    widescreen: true
+    fig_width: 10
+    fig_height: 4
+---
+
+# ggplot2: easy and beautiful
+
+Hadley Wickham's (almost completely) hassle-free implementation of:
+
+* ["The Grammar Of Graphics"](https://www.cs.uic.edu/~wilkinson/TheGrammarOfGraphics/GOG.html) by *Leland Wilkinson*.
+
+## ggplot2 resources {.bigger}
+
+### R Cookbook on Graphs:
+
+* Getting started with all the basics, nice and crispy!
+* http://www.cookbook-r.com/Graphs/
+
+### Official docs:
+
+* Extensive documentation, with lots of examples.
+* http://docs.ggplot2.org/current/
+
+## Setup: ggplot2 and example data
+
+```{r, message = FALSE, quiet=TRUE}
+install.packages("ggplot2")
+library("ggplot2")
+head(diamonds)
+```
+
+# Building plots
+
+
+## Building blocks {.bigger}
+
+### **geom:** a shape for data representation
+
+### **stat:** a (statistical) data transformation
+
+### **aes:** mapping aesthetics to data levels
+
+### **coord:** coordinate systems
+
+### **+** whatever customizations you might want
+
+
+## qplot: **q**uick plots, smart defaults
+
+```{r}
+p <- qplot(diamonds$cut)
+p + geom_bar()
+```
+
+## ggplot: more customization
+
+```{r eval = FALSE}
+p <- ggplot(data=diamonds)
+p + geom_point()
+```
+
+Fails with:
+```{r eval = FALSE}
+Error: geom_point requires the following missing aesthetics: x, y
+```
+
+## Specifiy an aesthetics mapping
+```{r}
+p <- ggplot(data=diamonds, aes(x=carat,y=price))
+p + geom_point()
+```
+
+## Leverage aesthetics mappings
+
+```{r}
+p <- ggplot(data=diamonds, aes(x=carat,y=price))
+p + geom_point(aes(colour=color, shape=cut))
+```
+
+## Liven up that bar chart
+
+```{r}
+p <- ggplot(data=diamonds, aes(x=cut))
+p + geom_bar(aes(fill=color))
+```
+
+## A boxplot: good-looking standards
+```{r}
+p <- ggplot(data=diamonds, aes(x=cut,y=depth))
+p + geom_boxplot()
+```
+
+## See it all: easy layering
+```{r}
+p <- ggplot(data=diamonds, aes(x=cut,y=depth))
+p + geom_jitter() + geom_boxplot()
+```
+
+## Cleaning up: easy tweaking
+
+```{r}
+p <- ggplot(data=diamonds, aes(x=cut,y=depth))
+p + geom_jitter(alpha=0.3) + geom_boxplot(alpha=0.7)
+```
+
+## Turn it all around: the coordinate system
+
+```{r}
+p <- ggplot(data=diamonds, aes(x=cut,y=depth))
+p + geom_jitter(alpha=0.3) + geom_boxplot(alpha=0.7) + coord_flip()
+```
+
+# ...geht fast von allein.
+
+> Just do it...
+
+# P.S.: Rmarkdown + ioslides
+
+### Rmarkdown: http://rmarkdown.rstudio.com/
+* https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf
+
+### Rmarkdown ioslides:
+* http://rmarkdown.rstudio.com/ioslides_presentation_format.html
+
+## HowTo produce these slides
+
+```{r eval = FALSE}
+git clone https://github.com/dlaehnemann/ggplot2_Intro
+cd ggplot2_Intro
+# Edit ggplot2_Intro.Rmd
+R
+> install.packages("rmarkdown")
+> library("rmarkdown")
+> install.packages("knitr")
+> library("knitr")
+> render("ggplot2_Intro.Rmd")
+q()
+```
+ Open the provided or your produced ggplot2\_Intro.html with any web browser.
