@@ -1,124 +1,267 @@
 ---
-title: "Data visualization in R: ggplot2"
+title: "Pipelines with Miniconda and Snakemake"
+subtitle: "Tutorial"
 author: "David Lähnemann"
-date: "August 31, 2016"
+date: "February 8, 2017"
 output:
   ioslides_presentation:
     widescreen: true
     fig_width: 10
     fig_height: 4
+    fig_caption: false
+    transition: faster
 ---
 
-# ggplot2: easy and beautiful
+<style>
+  #margin-15-percent > p {
+    margin-top: 15%;
+  }
+  #margin-10-percent > p {
+    margin-top: 10%;
+  }
+  #margin-5-percent > p {
+    margin-top: 5%
+  }
+  #margin-0-percent > p {
+    margin-top: 0%
+  }
+  #margin-minus5-percent > h3 {
+    margin-top: -5%;
+  }
+</style>
 
-Hadley Wickham's (almost completely) hassle-free implementation of:
+## Get the slides: | https://github.com/dlaehnemann/TutMinicondaSnakemake
 
-* ["The Grammar Of Graphics"](https://www.cs.uic.edu/~wilkinson/TheGrammarOfGraphics/GOG.html) by *Leland Wilkinson*.
-
-## ggplot2 resources {.bigger}
-
-### R Cookbook on Graphs:
-
-* Getting started with all the basics, nice and crispy!
-* http://www.cookbook-r.com/Graphs/
-
-### Official docs:
-
-* Extensive documentation, with lots of examples.
-* http://docs.ggplot2.org/current/
-
-## Setup: ggplot2 and example data
-
-```{r, message = FALSE, quiet=TRUE}
-install.packages("ggplot2")
-library("ggplot2")
-head(diamonds)
+```{bash, eval=FALSE}
+cd YourFavoriteTutorialFolder
+git clone https://github.com/dlaehnemann/TutMinicondaSnakemake.git
+cd TutMinicondaSnakemake
+firefox TutMinicondaSnakemake.html
 ```
 
-# Building plots
+### git for windows
+https://git-scm.com/download/win
 
 
-## Building blocks {.bigger}
-
-### **geom:** a shape for data representation
-
-### **stat:** a (statistical) data transformation
-
-### **aes:** mapping aesthetics to data levels
-
-### **coord:** coordinate systems
-
-### **+** whatever customizations you might want
+# Part 1: Miniconda | easily managing software
 
 
-## qplot: **q**uick plots, smart defaults
+## Minimal installation of package manager
 
-```{r}
-p <- qplot(diamonds$cut)
-p + geom_bar()
+```{r, echo=FALSE}
+knitr::include_url("https://conda.io/docs/")
 ```
 
-## ggplot: more customization
+## Maintained by a company, but Open Source {.centered #margin-10-percent}
 
-```{r eval = FALSE}
-p <- ggplot(data=diamonds)
-p + geom_point()
+```{r, echo=FALSE, out.width="66%"}
+knitr::include_graphics("figures/logo-continuum-black.svg")
 ```
 
-Fails with:
-```{r eval = FALSE}
-Error: geom_point requires the following missing aesthetics: x, y
+https://github.com/conda/conda
+
+
+## Cross-platform
+
+```{r, echo=FALSE}
+knitr::include_url("https://conda.io/miniconda.html")
 ```
 
-## Specifiy an aesthetics mapping
-```{r}
-p <- ggplot(data=diamonds, aes(x=carat,y=price))
-p + geom_point()
+
+## No admin rights needed {.centered}
+
+```{r, echo=FALSE, out.height="120%"}
+knitr::include_graphics("figures/sandwich.png")
 ```
 
-## Leverage aesthetics mappings
+https://xkcd.com/149/
 
-```{r}
-p <- ggplot(data=diamonds, aes(x=carat,y=price))
-p + geom_point(aes(colour=color, shape=cut))
+
+## Easy installation and updates {#margin-10-percent}
+
+```{bash, eval=FALSE}
+conda install numpy
+conda update numpy
 ```
 
-## Liven up that bar chart
+## Software in any programming language | C/C++, Java, Javascript, Ruby, Lua, ... {.centered #margin-10-percent}
 
-```{r}
-p <- ggplot(data=diamonds, aes(x=cut))
-p + geom_bar(aes(fill=color))
+```{r, echo=FALSE, out.width="75%"}
+knitr::include_graphics("figures/logos.svg")
 ```
 
-## A boxplot: good-looking standards
-```{r}
-p <- ggplot(data=diamonds, aes(x=cut,y=depth))
-p + geom_boxplot()
+
+## Bioconda channel: all the software you need
+
+```{r, echo=FALSE}
+knitr::include_url("https://bioconda.github.io/")
 ```
 
-## See it all: easy layering
-```{r}
-p <- ggplot(data=diamonds, aes(x=cut,y=depth))
-p + geom_jitter() + geom_boxplot()
+
+## Get started: (un)[Install Miniconda](https://conda.io/docs/install/quick.html)
+
+```{r, echo=FALSE}
+knitr::include_url("https://conda.io/docs/install/quick.html")
 ```
 
-## Cleaning up: easy tweaking
+## Bioconda channel setup
 
-```{r}
-p <- ggplot(data=diamonds, aes(x=cut,y=depth))
-p + geom_jitter(alpha=0.3) + geom_boxplot(alpha=0.7)
+```{r, echo=FALSE}
+knitr::include_url("https://bioconda.github.io/#set-up-channels")
 ```
 
-## Turn it all around: the coordinate system
+# Part 2: Snakemake | easy pipelining
 
-```{r}
-p <- ggplot(data=diamonds, aes(x=cut,y=depth))
-p + geom_jitter(alpha=0.3) + geom_boxplot(alpha=0.7) + coord_flip()
+## Input data 1: | raw, paired-end Illumina reads
+
+```{bash}
+head -n 12 examples/AF346983_1.1.fastq
 ```
 
-# ...geht fast von allein.
+## Input data 2: | reference sequence of German human mitochondrium (+ bwa index)
 
-> Just do it...
+```{bash}
+head -n 12 examples/AF346983_1_Mitochondrium_HomoSapiens_de.fa
+```
+
+## Install software
+
+### bwa: mapping fastq files
+http://bio-bwa.sourceforge.net/bwa.shtml
+
+```{bash, eval=FALSE}
+conda install bwa
+```
+
+### samtools: all kinds of alignment file magic
+http://bio-bwa.sourceforge.net/bwa.shtml
+
+```{bash, eval=FALSE}
+conda install samtools
+```
+
+### Snakemake: pipelining
+https://snakemake.readthedocs.io/en/latest/
+
+```{bash, eval=FALSE}
+conda install snakemake
+```
+
+## Snakemake for pipelining
+
+```{r, echo=FALSE}
+knitr::include_url("https://snakemake.readthedocs.io/en/latest/")
+```
+
+## Think back from the target {.build}
+
+### Our target for today:
+`samtools flagstat` output for our `AF346983_1` sequencing dataset (`AF346983_1.1.fastq` and `AF346983_1.2.fastq`).
+
+### Create a `Snakefile`
+Use an editor of your choice and create it in the folder `example`.
+
+### Write your first rule
+As the first rule in `Snakefile`, create a `rule target` with the target file as input, e.g. `AF346983_1.flagstat`.
+
+```{python, eval=FALSE}
+rule target:
+    input:
+        "AF346983_1.flagstat"
+
+```
+
+## 1st step back: 2nd rule samtools_flagstat {.build}
+
+### Define input, output and shell command
+Check `samtools flagstat` command.
+
+### Abstract the sample/dataset name
+Replace it with a wildcard, e.g. `{sample}`, in output and input definition.
+
+```{python, eval=FALSE}
+rule samtools_flagstat:
+    input:
+        "{sample}.bam"
+    output:
+        "{sample}.flagstat"
+    shell:
+        "samtools flagstat {input} > {output}"
+
+```
+
+## 2nd step back: 3rd rule bwa_mem {.build}
+
+### Define output and shell command, then input.
+Check `bwa mem` command.
+
+### Abstract the sample/dataset name
+Replace it with a wildcard, e.g. `{sample}`, in output and input definition.
+
+```{python, eval=FALSE}
+rule bwa_mem:
+    input:
+        "AF346983_1_Mitochondrium_HomoSapiens_de.fa",
+        "{sample}.1.fastq",
+        "{sample}.2.fastq"
+    output:
+        "{sample}.bam"
+    shell:
+        "bwa mem {input} > {output}"
+
+```
+
+## Run the pipeline in the example folder {.build}
+
+### Save and close `Snakefile`
+
+### Run the pipeline (requires `Snakefile` in working directory)
+```{bash, eval=FALSE}
+snakemake
+```
+
+### Check the output
+
+```{bash}
+cat examples/results/AF346983_1.flagstat
+```
+
+
+## Visualise the workflow
+
+If you have Graphviz installed (Debian/Ubuntu: `sudo apt-get install graphviz`):
+
+```{bash, eval=FALSE}
+snakemake --dag | dot -Tsvg > dag.svg
+```
+
+### DAG: the directed acyclic graph of your pipeline
+
+```{r, echo=FALSE, out.height="50%"}
+knitr::include_graphics("examples/results/dag.svg")
+```
+
+## Go crazy... {.build .centered}
+
+```{r, echo=FALSE, out.width="40%"}
+knitr::include_graphics("figures/rulegraph.svg")
+```
+
+## Well, actually...
+
+### Just use it and check out the extensive docs:
+
+https://snakemake.readthedocs.io/en/latest/index.html
+
+### Including an extended Snakemake introduction (see all the most important features):
+
+http://slides.com/johanneskoester/snakemake-tutorial-2016#/
+
+### and extensive tutorials with best practices:
+
+https://snakemake.readthedocs.io/en/latest/tutorial/welcome.html
+
+
 
 # P.S.: Rmarkdown + ioslides
 
@@ -130,16 +273,16 @@ p + geom_jitter(alpha=0.3) + geom_boxplot(alpha=0.7) + coord_flip()
 
 ## HowTo produce these slides
 
-```{r eval = FALSE}
-git clone https://github.com/dlaehnemann/ggplot2_Intro
-cd ggplot2_Intro
-# Edit ggplot2_Intro.Rmd
+```{r, eval = FALSE}
+git clone https://github.com/dlaehnemann/TutMinicondaSnakemake
+cd TutMinicondaSnakemake
+# Edit TutMinicondaSnakemake.Rmd
 R
 > install.packages("rmarkdown")
 > library("rmarkdown")
 > install.packages("knitr")
 > library("knitr")
-> render("ggplot2_Intro.Rmd")
+> render("TutMinicondaSnakemake.Rmd")
 q()
 ```
- Open the provided or your produced ggplot2\_Intro.html with any web browser.
+ Open the provided or your produced `TutMinicondaSnakemake.html` with any current web browser.

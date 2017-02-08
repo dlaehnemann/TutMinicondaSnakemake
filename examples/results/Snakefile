@@ -1,0 +1,22 @@
+
+rule target:
+    input:
+        "AF346983_1.flagstat"
+
+rule samtools_flagstat:
+    input:
+        "{sample}.bam"
+    output:
+        "{sample}.flagstat"
+    shell:
+        "samtools flagstat {input} > {output}"
+
+rule bwa_mem:
+    input:
+        "AF346983_1_Mitochondrium_HomoSapiens_de.fa",
+        "{sample}.1.fastq",
+        "{sample}.2.fastq"
+    output:
+        "{sample}.bam"
+    shell:
+        "bwa mem {input} > {output}"
