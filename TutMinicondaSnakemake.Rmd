@@ -185,7 +185,7 @@ Replace it with a wildcard, e.g. `{sample}`, in output and input definition.
 ```{python, eval=FALSE}
 rule samtools_flagstat:
     input:
-        "{sample}.bam"
+        "{sample}.sam"
     output:
         "{sample}.flagstat"
     shell:
@@ -208,7 +208,7 @@ rule bwa_mem:
         "{sample}.1.fastq",
         "{sample}.2.fastq"
     output:
-        "{sample}.bam"
+        "{sample}.sam"
     shell:
         "bwa mem {input} > {output}"
 

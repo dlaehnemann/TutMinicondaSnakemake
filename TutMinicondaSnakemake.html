@@ -278,7 +278,7 @@ conda update numpy</pre>
 
 <pre class = 'prettyprint lang-python'>rule samtools_flagstat:
     input:
-        &quot;{sample}.bam&quot;
+        &quot;{sample}.sam&quot;
     output:
         &quot;{sample}.flagstat&quot;
     shell:
@@ -301,7 +301,7 @@ conda update numpy</pre>
         &quot;{sample}.1.fastq&quot;,
         &quot;{sample}.2.fastq&quot;
     output:
-        &quot;{sample}.bam&quot;
+        &quot;{sample}.sam&quot;
     shell:
         &quot;bwa mem {input} &gt; {output}&quot;
 </pre>
