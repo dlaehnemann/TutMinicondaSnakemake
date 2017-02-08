@@ -15,6 +15,7 @@ git clone https://github.com/dlaehnemann/TutMinicondaSnakemake
 Links for how to do this:
 * [Main Rmarkdown documentation](http://rmarkdown.rstudio.com/)
 * [Rmarkdown cheat sheet](https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf)
+* [knitr (code engine behind Rmarkdown) with other languages](https://yihui.name/knitr/demo/engines/)
 * [ioslides with Rmarkdown intro](http://rmarkdown.rstudio.com/ioslides_presentation_format.html)
 
 ### 2. Recompile `TutMinicondaSnakemake.html` using `R`:
