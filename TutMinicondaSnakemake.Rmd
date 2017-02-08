@@ -30,8 +30,9 @@ output:
   }
 </style>
 
-## Get the slides: | https://github.com/dlaehnemann/TutMinicondaSnakemake
+## Get the slides
 
+### Linux / OS X
 ```{bash, eval=FALSE}
 cd YourFavoriteTutorialFolder
 git clone https://github.com/dlaehnemann/TutMinicondaSnakemake.git
@@ -39,8 +40,10 @@ cd TutMinicondaSnakemake
 firefox TutMinicondaSnakemake.html
 ```
 
-### git for windows
-https://git-scm.com/download/win
+### Windows
+
+* git for windows: https://git-scm.com/download/win
+* OR: "Clone or download" > "Download ZIP" at https://github.com/dlaehnemann/TutMinicondaSnakemake
 
 
 # Part 1: Miniconda | easily managing software
@@ -222,20 +225,27 @@ snakemake
 
 ### Check the output
 
-```{bash}
+```{bash, eval=FALSE}
+cat examples/AF346983_1.flagstat
+```
+
+```{bash, echo=FALSE}
 cat examples/results/AF346983_1.flagstat
 ```
 
 
 ## Visualise the workflow
 
-If you have Graphviz installed (Debian/Ubuntu: `sudo apt-get install graphviz`):
+### install Graphviz:
 
+```{bash, eval=FALSE}
+conda install graphviz
+```
+
+### create a DAG image: the directed acyclic graph of your pipeline
 ```{bash, eval=FALSE}
 snakemake --dag | dot -Tsvg > dag.svg
 ```
-
-### DAG: the directed acyclic graph of your pipeline
 
 ```{r, echo=FALSE, out.height="50%"}
 knitr::include_graphics("examples/results/dag.svg")
@@ -247,17 +257,35 @@ knitr::include_graphics("examples/results/dag.svg")
 knitr::include_graphics("figures/rulegraph.svg")
 ```
 
+## Leverage features such as: {.build}
+
+### Direct server cluster support
+
+```{bash, eval=FALSE}
+snakemake --cluster "qsub -pe threaded {threads}" --jobs 100
+```
+
+### Automatic re-run of pipeline parts upon file update
+
+### Automatic cleanup of incomplete output files when rule fails
+
+### Statistics of time spent in rules: `--stats <filename>`
+
+### HTML-based GUI: `--gui <port>`
+
+### ...
+
 ## Well, actually...
 
 ### Just use it and check out the extensive docs:
 
 https://snakemake.readthedocs.io/en/latest/index.html
 
-### Including an extended Snakemake introduction (see all the most important features):
+### Extended Snakemake introduction (see all the most important features):
 
 http://slides.com/johanneskoester/snakemake-tutorial-2016#/
 
-### and extensive tutorials with best practices:
+### Extensive tutorials with best practices:
 
 https://snakemake.readthedocs.io/en/latest/tutorial/welcome.html
 
