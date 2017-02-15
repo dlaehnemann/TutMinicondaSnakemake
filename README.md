@@ -1,4 +1,4 @@
-# A quick introduction into ggplot2, with ioslides produced from Rmarkdown
+# A quick hands-on tutorial into software package management with Miniconda and workflow management with Snakemake, with ioslides produced from Rmarkdown
 
 ## Looking at the slides
 
